@@ -1,0 +1,4 @@
+name: LLibrary
+version: ${project.version}
+main: cz.larkyy.llibrary.LLibrary
+api-version: 1.16
