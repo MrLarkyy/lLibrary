@@ -174,6 +174,11 @@ public class CommandBuilder {
         return this;
     }
 
+    public CommandBuilder addArgument(String argument, ArgumentType argType, String permission, boolean canSendConsole) {
+        arguments.add(new Argument(argument, argType, permission, canSendConsole));
+        return this;
+    }
+
     public CommandBuilder removeArgument(int i) {
         this.arguments.remove(i);
         return this;
