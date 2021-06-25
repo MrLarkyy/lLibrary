@@ -13,15 +13,12 @@ import org.bukkit.persistence.PersistentDataType;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class InventoryBuilder implements InventoryHolder, Listener {
 
     private Inventory inv;
-    private final Player p;
+    private Player p;
     private List<String> lines;
     private Map<Character, ItemStack> items;
     private Map<Character, String> functions;
@@ -29,7 +26,7 @@ public class InventoryBuilder implements InventoryHolder, Listener {
     private final JavaPlugin main;
     private Map<String,Object> data;
 
-    public InventoryBuilder(JavaPlugin main, Player p){
+    public InventoryBuilder(JavaPlugin main, Player p) {
         this.p = p;
         this.lines = new ArrayList<>();
         this.items = new HashMap<>();
@@ -38,6 +35,7 @@ public class InventoryBuilder implements InventoryHolder, Listener {
         this.main = main;
         this.data = new HashMap<>();
     }
+
 
     @Override
     public @NotNull Inventory getInventory() {
@@ -118,6 +116,15 @@ public class InventoryBuilder implements InventoryHolder, Listener {
         return this;
     }
 
+    public Map<Character, ItemStack> getItems() {
+        return items;
+    }
+
+    public InventoryBuilder setItems(Map<Character,ItemStack> items) {
+        this.items = items;
+        return this;
+    }
+
     // FUNCTIONS
 
     public InventoryBuilder addFunction(char key, String function) {
@@ -138,11 +145,28 @@ public class InventoryBuilder implements InventoryHolder, Listener {
         return (String) ItemUtils.getItemData(main,is,PersistentDataType.STRING,"InvUtils-Key");
     }
 
+    public Map<Character, String> getFunctions() {
+        return functions;
+    }
+
+    public String getFunction(Character character) {
+        return functions.get(character);
+    }
+
+    public InventoryBuilder setFunctions(Map<Character,String> functions) {
+        this.functions = functions;
+        return this;
+    }
+
     //  TITLE
 
     public InventoryBuilder setTitle(String title) {
         this.title = ChatUtils.format(title);
         return this;
+    }
+
+    public String getTitle() {
+        return title;
     }
 
     // DATA
@@ -154,6 +178,11 @@ public class InventoryBuilder implements InventoryHolder, Listener {
 
     public InventoryBuilder removeData(String key) {
         this.data.remove(key);
+        return this;
+    }
+
+    public InventoryBuilder setData(Map<String,Object> data) {
+        this.data = data;
         return this;
     }
 
@@ -176,7 +205,27 @@ public class InventoryBuilder implements InventoryHolder, Listener {
         return p;
     }
 
+    public InventoryBuilder setPlayer(Player p) {
+        this.p = p;
+        return this;
+    }
+
     public Inventory getInv() {
         return inv;
     }
+
+    public InventoryBuilder copy() {
+        Map<Character, ItemStack> map = new HashMap<>();
+        this.items.forEach((key, item) -> map.put(key, item.clone()));
+
+        InventoryBuilder inv = new InventoryBuilder(main,p)
+                .setLines(lines)
+                .setItems(map)
+                .setFunctions(functions)
+                .setTitle(title)
+                .setData(data);
+
+        return inv;
+    }
+
 }

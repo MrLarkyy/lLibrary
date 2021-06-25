@@ -10,6 +10,9 @@ import java.util.List;
 
 public class ChatUtils {
     public static String format(String str) {
+        if (str == null) {
+            return null;
+        }
         return Colors.process(str);
     }
     public static List<String> format(List<String> list) {

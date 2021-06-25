@@ -50,18 +50,6 @@ public class ItemUtils {
         return makeItemStack(material,displayName, new ArrayList<>());
     }
 
-    public static ItemStack makeItemStackFromConfig(FileConfiguration config, String path) {
-        ItemStack is = makeItemStack(
-                Material.valueOf(config.getString(path+".material")),
-                config.getString(path+".displayName"),
-                config.getStringList(path+".lore")
-        );
-        if (config.getConfigurationSection(path).getKeys(false).contains("modelID")) {
-            setItemModelID(is,config.getInt(path+".modelID"));
-        }
-        return is;
-    }
-
     public static ItemStack addItemLore(ItemStack is, List<String> lore) {
         ItemMeta im = is.getItemMeta();
         List<String> newLore = new ArrayList<>();
@@ -84,6 +72,10 @@ public class ItemUtils {
 
     public static ItemStack addItemData(ItemStack is, PersistentDataType type, NamespacedKey key, Object value) {
         ItemMeta im = is.getItemMeta();
+        if (im==null) {
+            return is;
+        }
+
         PersistentDataContainer data = im.getPersistentDataContainer();
         data.set(key, type, value);
         is.setItemMeta(im);
